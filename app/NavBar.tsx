@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { FaBugSlash } from 'react-icons/fa6';
+import { VscDebugConsole } from 'react-icons/vsc';
 
 const NavBar = () => {
 	const links = [
@@ -10,7 +10,7 @@ const NavBar = () => {
 	return (
 		<nav className='flex space-x-6 border-b mb-5 px-5 h-14 items-center'>
 			<Link href='/'>
-				<FaBugSlash />
+				<VscDebugConsole />
 			</Link>
 			<ul className='flex space-x-6'>
 				{links.map((link) => (
