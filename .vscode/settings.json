@@ -8,5 +8,5 @@
 		"titleBar.activeBackground": "#0073cf",
 		"titleBar.inactiveBackground": "#000"
 	},
-	"cSpell.words": ["easymde", "tailwindcss"]
+	"cSpell.words": ["easymde", "simplemde", "tailwindcss"]
 }
