@@ -1,11 +1,12 @@
 'use client';
 // import React from 'react';
-import { Button, TextField } from '@radix-ui/themes';
+import { Button, Callout, TextField } from '@radix-ui/themes';
 import SimpleMDE from 'react-simplemde-editor';
 import { useForm, Controller } from 'react-hook-form';
 import 'easymde/dist/easymde.min.css';
 // import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface IssueForm {
 	title: string;
@@ -15,44 +16,54 @@ interface IssueForm {
 const NewIssuePage = () => {
 	const router = useRouter();
 	const { register, control, handleSubmit } = useForm<IssueForm>();
+	const [error, setError] = useState('');
 	return (
-		<form
-			className='max-w-xl space-y-3'
-			onSubmit={handleSubmit(async (data) => {
-				console.log(data);
-				try {
-					const response = await fetch('../api/issues', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify(data),
-					});
-					if (!response.ok) {
-						throw new Error(`HTTP error status: ${response.status}`);
+		<div className='max-w-xl'>
+			{/* this is weird syntax to me, but is is IF there is an error, then render this */}
+			{error && (
+				<Callout.Root color='red' className='mb-5'>
+					<Callout.Text>🧨 {error}</Callout.Text>
+				</Callout.Root>
+			)}
+			<form
+				className='space-y-3'
+				onSubmit={handleSubmit(async (data) => {
+					// console.log(data);
+					try {
+						const response = await fetch('../api/issues', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify(data),
+						});
+						if (!response.ok) {
+							throw new Error(`HTTP error status: ${response.status}`);
+						}
+						router.push('/issues');
+					} catch (error) {
+						// console.error('There was a problem with the fetch operation:', error);
+						setError('An errour hath befallen.');
 					}
-					router.push('/issues');
-				} catch (error) {
-					console.error('There was a problem with the fetch operation:', error);
-				}
-			})}
-		>
-			<TextField.Root
-				placeholder='Title'
-				{...register('title')}
-			></TextField.Root>
-			<Controller
-				name='description'
-				control={control}
-				render={({ field }) => (
-					<SimpleMDE
-						placeholder='Have you tried turning it off and back on again?'
-						{...field}
-					/>
-				)}
-			/>
-			<Button>Submit New Issue</Button>
-		</form>
+				})}
+			>
+				<TextField.Root
+					placeholder='Title'
+					{...register('title')}
+				></TextField.Root>
+				<Controller
+					name='description'
+					control={control}
+					render={({ field }) => (
+						<SimpleMDE
+							placeholder='Have you tried turning it off and back on again?'
+							{...field}
+						/>
+					)}
+				/>
+				<Button>Submit New Issue</Button>
+			</form>
+		</div>
 	);
 };
 
